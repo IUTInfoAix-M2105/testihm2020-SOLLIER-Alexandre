@@ -19,6 +19,14 @@ import java.util.concurrent.ExecutionException;
 
 public class TraceurDeFonction extends Application {
 
+  GridPane root;
+
+  Label expressionLabel;
+  TextField expressionTextField;
+
+  Button analyseButton;
+  Label analysedExpressionLabel;
+
   public static void main(String[] args) {
     launch(args);
   }
@@ -30,18 +38,27 @@ public class TraceurDeFonction extends Application {
     stage.setHeight(650);
     stage.setResizable(false);
 
-    GridPane root = new GridPane();
+    root = new GridPane();
     root.setHgap(10);
 
-    Label expressionLabel = new Label("Expression:");
-    TextField expressionTextField = new TextField("exp(-x * 0.2) * sin(x)");
+    setupAnalyseNodes();
+
+    Scene scene = new Scene(root);
+
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  void setupAnalyseNodes() {
+    expressionLabel = new Label("Expression:");
+    expressionTextField = new TextField("exp(-x * 0.2) * sin(x)");
     root.add(expressionLabel, 0, 0);
     root.add(expressionTextField, 1, 0);
 
-    Button analyseButton = new Button("Analyser");
+    analyseButton = new Button("Analyser");
     root.add(analyseButton, 0, 1, 2, 1);
 
-    Label analysedExpressionLabel = new Label();
+    analysedExpressionLabel = new Label();
     root.add(analysedExpressionLabel, 0, 2, 2, 1);
 
     analyseButton.setOnAction(actionEvent -> {
@@ -54,11 +71,6 @@ public class TraceurDeFonction extends Application {
         analysedExpressionLabel.setText(e.getLocalizedMessage());
       }
     });
-
-    Scene scene = new Scene(root);
-
-    stage.setScene(scene);
-    stage.show();
   }
 
   void calculCoeffTransformationsAffines() {
@@ -73,10 +85,10 @@ public class TraceurDeFonction extends Application {
   }
 
   private void setIds() {
-/*      votreIdentificateur.setId("texteAAnalyser");
-      votreIdentificateur.setId("resultatAnalyse");
-      votreIdentificateur.setId("demandeAnalyser");
-      votreIdentificateur.setId("demandeTracer");
+      expressionTextField.setId("texteAAnalyser");
+      analysedExpressionLabel.setId("resultatAnalyse");
+      analyseButton.setId("demandeAnalyser");
+      /*votreIdentificateur.setId("demandeTracer");
       votreIdentificateur.setId("demandeEffacer");
       votreIdentificateur.setId("zoneTraceCourbe");
       votreIdentificateur.setId("choixXMin");
