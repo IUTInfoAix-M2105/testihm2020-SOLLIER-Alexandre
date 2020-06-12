@@ -1,8 +1,6 @@
 package fr.univ_amu.iut.ihm;
 
-import fr.univ_amu.iut.utilitaires.Analyseur;
-import fr.univ_amu.iut.utilitaires.ErreurDeSyntaxe;
-import fr.univ_amu.iut.utilitaires.Expression;
+import fr.univ_amu.iut.utilitaires.*;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -10,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -47,6 +46,13 @@ public class TraceurDeFonction extends Application {
   Pane graph;
   Button drawButton;
   Button clearButton;
+
+  Expression expression;
+
+  double Ax;
+  double Bx;
+  double Ay;
+  double By;
 
   public static void main(String[] args) {
     launch(args);
@@ -90,16 +96,7 @@ public class TraceurDeFonction extends Application {
     analysedExpressionLabel = new Label();
     root.add(analysedExpressionLabel, 0, 10, 2, 1);
 
-    analyseButton.setOnAction(actionEvent -> {
-      Analyseur analyseur = new Analyseur(expressionTextField.getText());
-
-      try {
-        Expression expression = analyseur.analyser();
-        analysedExpressionLabel.setText("Expression analysée : f(x) = " + expression.toString());
-      } catch (Exception e) {
-        analysedExpressionLabel.setText(e.getLocalizedMessage());
-      }
-    });
+    analyseButton.setOnAction(actionEvent -> analyzeExpression());
   }
 
   void setupGraphPane() {
@@ -111,6 +108,7 @@ public class TraceurDeFonction extends Application {
     clearButton = new Button("Effacer");
 
     clearButton.setOnAction(actionEvent -> clearGraph());
+    drawButton.setOnAction(actionEvent -> updateGraph());
 
     root.add(graph, 0, 0, 2, 1);
     root.add(drawButton, 0, 1);
@@ -207,15 +205,52 @@ public class TraceurDeFonction extends Application {
     graph.getChildren().clear();
   }
 
-  void calculCoeffTransformationsAffines() {
-  }
-  	
-  int transformationAffineY(double y) {
-    return 0;
+  void updateGraph() {
+    if (analyzeExpression()) {
+      calculCoeffTransformationsAffines();
+      CalculateurPointsFonction calculateurPointsFonction = new CalculateurPointsFonction(expression,
+              Double.parseDouble(minXTextField.getText()), Double.parseDouble(maxXTextField.getText()));
+
+      for (int i = 1; i < calculateurPointsFonction.getListePoints().size(); ++i) {
+        final Basic2DPoint actualPoint = calculateurPointsFonction.getListePoints().get(i);
+        final Basic2DPoint previousPoint = calculateurPointsFonction.getListePoints().get(i - 1);
+
+        Line line = new Line(transformationAffineX(previousPoint.getX()), transformationAffineY(previousPoint.getX()),
+                transformationAffineX(actualPoint.getX()), transformationAffineY(actualPoint.getY()));
+        graph.getChildren().add(line);
+      }
+    }
   }
 
-  int transformationAffineX(double x) {
-    return 0;
+  boolean analyzeExpression() {
+    Analyseur analyseur = new Analyseur(expressionTextField.getText());
+
+    try {
+      expression = analyseur.analyser();
+      analysedExpressionLabel.setText("Expression analysée : f(x) = " + expression.toString());
+
+      return true;
+    } catch (Exception e) {
+      analysedExpressionLabel.setText(e.getLocalizedMessage());
+    }
+
+    return false;
+  }
+
+  void calculCoeffTransformationsAffines() {
+    Ax = 1;
+    Bx = -Ax * graph.getLayoutX();
+
+    Ay = 1;
+    By = -Ay * graph.getLayoutY();
+  }
+
+  double transformationAffineX(double x) {
+    return Ax * x + Bx;
+  }
+  	
+  double transformationAffineY(double y) {
+    return Ay * y + By;
   }
 
   private void setIds() {
