@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -35,6 +36,17 @@ public class TraceurDeFonction extends Application {
 
   TextField minXTextField;
   TextField maxXTextField;
+
+  Label xSpacingLabel;
+  Label ySpacingLabel;
+
+  Slider xSpacingSlider;
+  Slider ySpacingSlider;
+
+  TextField xSpacingTextField;
+  TextField ySpacingTextField;
+
+  Pane graph;
 
   public static void main(String[] args) {
     launch(args);
@@ -108,9 +120,9 @@ public class TraceurDeFonction extends Application {
     root.add(minXTextField, 0, 1);
     root.add(maxXTextField, 1, 1);
 
-    Label xSpacingLabel = new Label("Espacement abscisse");
+    xSpacingLabel = new Label("Espacement abscisse");
 
-    TextField xSpacingTextField = new TextField();
+    xSpacingTextField = new TextField();
     xSpacingTextField.setTextFormatter(new TextFormatter<Double>(new StringConverter<>() {
       @Override
       public String toString(Double aDouble) {
@@ -130,7 +142,7 @@ public class TraceurDeFonction extends Application {
       }
     }));
 
-    Slider xSpacingSlider = new Slider();
+    xSpacingSlider = new Slider();
     xSpacingSlider.setMin(0.5);
     xSpacingSlider.setMax(2);
     xSpacingSlider.setValue(0.5);
@@ -141,9 +153,9 @@ public class TraceurDeFonction extends Application {
     root.add(xSpacingTextField, 0, 3);
     root.add(xSpacingSlider, 1, 3);
 
-    Label ySpacingLabel = new Label("Espacement ordonnée");
+    ySpacingLabel = new Label("Espacement ordonnée");
 
-    TextField ySpacingTextField = new TextField();
+    ySpacingTextField = new TextField();
     ySpacingTextField.setTextFormatter(new TextFormatter<Double>(new StringConverter<>() {
       @Override
       public String toString(Double aDouble) {
@@ -163,7 +175,7 @@ public class TraceurDeFonction extends Application {
       }
     }));
 
-    Slider ySpacingSlider = new Slider();
+    ySpacingSlider = new Slider();
     ySpacingSlider.setMin(0.25);
     ySpacingSlider.setMax(2);
     ySpacingSlider.setValue(0.25);
@@ -195,11 +207,11 @@ public class TraceurDeFonction extends Application {
       votreIdentificateur.setId("zoneTraceCourbe");*/
       minXTextField.setId("choixXMin");
       maxXTextField.setId("choixXMax");
-      /*votreIdentificateur.setId("choixEspacementX_v1");
-      votreIdentificateur.setId("choixEspacementX_v2");
-      votreIdentificateur.setId("choixEspacementY_v1");
-      votreIdentificateur.setId("choixEspacementY_v2");
-      votreIdentificateur.setId("choixCouleur");
+      xSpacingSlider.setId("choixEspacementX_v1");
+      xSpacingTextField.setId("choixEspacementX_v2");
+      ySpacingSlider.setId("choixEspacementY_v1");
+      ySpacingTextField.setId("choixEspacementY_v2");
+      /*votreIdentificateur.setId("choixCouleur");
       votreIdentificateur.setId("choixEpaisseur");
       votreIdentificateur.setId("segmentsATracer");
       votreIdentificateur.setId("quadrillage");
