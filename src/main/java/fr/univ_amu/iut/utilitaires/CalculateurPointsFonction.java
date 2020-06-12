@@ -1,5 +1,6 @@
 package fr.univ_amu.iut.utilitaires;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class CalculateurPointsFonction {
@@ -8,6 +9,26 @@ public class CalculateurPointsFonction {
 
   private ArrayList<Basic2DPoint> listePoints;
   private double yMin, yMax;
+
+  public static void main(String[] args) {
+    Analyseur analyseur = new Analyseur("exp(-x * 0.2) * sin(x)");
+
+    try {
+      Expression expression = analyseur.analyser();
+      System.out.println(expression.toString());
+
+      CalculateurPointsFonction calculateurPointsFonction = new CalculateurPointsFonction(expression, -0.5, 20);
+      for (Basic2DPoint p : calculateurPointsFonction.getListePoints())
+        System.out.println("f(" + p.getX() + ") = " + p.getY());
+
+      System.out.println("Y Min: " + calculateurPointsFonction.getYMin());
+      System.out.println("Y Max: " + calculateurPointsFonction.getYMax());
+    } catch (IOException e) {
+      System.err.println("L'expression a levée une IOException");
+    } catch (ErreurDeSyntaxe e) {
+      System.err.println("L'expression est mal formée");
+    }
+  }
 
   public CalculateurPointsFonction(Expression f, double xMin, double xMax) {
 
