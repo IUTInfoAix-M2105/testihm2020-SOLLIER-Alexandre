@@ -6,12 +6,10 @@ import fr.univ_amu.iut.utilitaires.Expression;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -47,6 +45,8 @@ public class TraceurDeFonction extends Application {
   TextField ySpacingTextField;
 
   Pane graph;
+  Button drawButton;
+  Button clearButton;
 
   public static void main(String[] args) {
     launch(args);
@@ -62,6 +62,11 @@ public class TraceurDeFonction extends Application {
     root = new GridPane();
     root.setHgap(10);
     root.setVgap(3);
+    root.setPadding(new Insets(8));
+
+    ColumnConstraints columnConstraints = new ColumnConstraints();
+    columnConstraints.setPercentWidth(50);
+    root.getColumnConstraints().addAll(columnConstraints, columnConstraints);
 
     setupAnalyseNodes();
     setupGraphPane();
@@ -76,14 +81,14 @@ public class TraceurDeFonction extends Application {
   void setupAnalyseNodes() {
     expressionLabel = new Label("Expression:");
     expressionTextField = new TextField("exp(-x * 0.2) * sin(x)");
-    root.add(expressionLabel, 0, 6);
-    root.add(expressionTextField, 1, 6);
+    root.add(expressionLabel, 0, 8);
+    root.add(expressionTextField, 1, 8);
 
     analyseButton = new Button("Analyser");
-    root.add(analyseButton, 0, 7, 2, 1);
+    root.add(analyseButton, 0, 9, 2, 1);
 
     analysedExpressionLabel = new Label();
-    root.add(analysedExpressionLabel, 0, 8, 2, 1);
+    root.add(analysedExpressionLabel, 0, 10, 2, 1);
 
     analyseButton.setOnAction(actionEvent -> {
       Analyseur analyseur = new Analyseur(expressionTextField.getText());
@@ -98,7 +103,18 @@ public class TraceurDeFonction extends Application {
   }
 
   void setupGraphPane() {
+    graph = new Pane();
+    graph.setPrefHeight(200);
+    graph.setStyle("-fx-background-color: white");
 
+    drawButton = new Button("Tracer");
+    clearButton = new Button("Effacer");
+
+    clearButton.setOnAction(actionEvent -> clearGraph());
+
+    root.add(graph, 0, 0, 2, 1);
+    root.add(drawButton, 0, 1);
+    root.add(clearButton, 1, 1);
   }
 
   void setupGraphNodes() {
@@ -114,11 +130,11 @@ public class TraceurDeFonction extends Application {
     minXTextField.setText("-10");
     maxXTextField.setText("10");
 
-    root.add(minXLabel, 0, 0);
-    root.add(maxXLabel, 1, 0);
+    root.add(minXLabel, 0, 2);
+    root.add(maxXLabel, 1, 2);
 
-    root.add(minXTextField, 0, 1);
-    root.add(maxXTextField, 1, 1);
+    root.add(minXTextField, 0, 3);
+    root.add(maxXTextField, 1, 3);
 
     xSpacingLabel = new Label("Espacement abscisse");
 
@@ -149,9 +165,9 @@ public class TraceurDeFonction extends Application {
 
     xSpacingTextField.textProperty().bindBidirectional(xSpacingSlider.valueProperty(), new NumberStringConverter());
 
-    root.add(xSpacingLabel, 0, 2);
-    root.add(xSpacingTextField, 0, 3);
-    root.add(xSpacingSlider, 1, 3);
+    root.add(xSpacingLabel, 0, 4);
+    root.add(xSpacingTextField, 0, 5);
+    root.add(xSpacingSlider, 1, 5);
 
     ySpacingLabel = new Label("Espacement ordonnée");
 
@@ -182,9 +198,13 @@ public class TraceurDeFonction extends Application {
 
     ySpacingTextField.textProperty().bindBidirectional(ySpacingSlider.valueProperty(), new NumberStringConverter());
 
-    root.add(ySpacingLabel, 0, 4);
-    root.add(ySpacingTextField, 0, 5);
-    root.add(ySpacingSlider, 1, 5);
+    root.add(ySpacingLabel, 0, 6);
+    root.add(ySpacingTextField, 0, 7);
+    root.add(ySpacingSlider, 1, 7);
+  }
+
+  void clearGraph() {
+    graph.getChildren().clear();
   }
 
   void calculCoeffTransformationsAffines() {
@@ -202,9 +222,9 @@ public class TraceurDeFonction extends Application {
       expressionTextField.setId("texteAAnalyser");
       analysedExpressionLabel.setId("resultatAnalyse");
       analyseButton.setId("demandeAnalyser");
-      /*votreIdentificateur.setId("demandeTracer");
-      votreIdentificateur.setId("demandeEffacer");
-      votreIdentificateur.setId("zoneTraceCourbe");*/
+      drawButton.setId("demandeTracer");
+      clearButton.setId("demandeEffacer");
+      graph.setId("zoneTraceCourbe");
       minXTextField.setId("choixXMin");
       maxXTextField.setId("choixXMax");
       xSpacingSlider.setId("choixEspacementX_v1");
